@@ -1,7 +1,8 @@
-import "./module.js";
-import "./scss/index.scss";
+import './module.js';
+import './scss/index.scss'
 
 async function start( )  {
+  
   return await Promise.resolve("async working");
 }
 start().then(console.log);
