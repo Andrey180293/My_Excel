@@ -1,4 +1,28 @@
-$red: rgb(91, 97, 86);
+@import "~normalize.css";
+@import url("https://fonts.googleapis.com/css2?family=Comforter+Brush&family=Roboto:wght@100;400&display=swap");
+
+@import "header";
+@import "toolbar";
+@import "formula";
+@import "table";
+@import "dashboard";
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+  padding: 0;
+}
 body {
-  background: $red;
+  //background: rgb(97, 91, 91);
+  font: size 12px;
+  font-family: "Roboto", sans-serif;
+}
+
+.excel {
+  position: relative;
+  color: #888;
+  height: 100%;
+  max-width: 100%;
+  padding-bottom: 2px;
+  font-size: 0.8rem;
 }
