@@ -1,49 +1,54 @@
-import { $ } from "../../core/dom";
+import {$} from '@core/dom'
 
-export function resizeHandler(event, $root) {
-  let $resizer = $(event.target);
-  let $parent = $resizer.closest('[data-type="resizable"]');
-  let coords = $parent.getCoords();
-  let type = $resizer.data.resize;
-  let cells = $root.findAll(`[data-col="${$parent.data.col}"]`);
-  let valueCol = null;
-  let valueRow = null;
-  document.onmousemove = (e) => {
-    if (type === "col") {
-      const delta = e.clientX - coords.right;
-      valueRow = coords.width + delta;
-      $resizer.css({
-        right:
-          valueRow > 40
-            ? -delta + "px"
-            : coords.right - coords.left - 40 + "px",
-      });
-    } else {
-      let delta = e.clientY - coords.bottom;
-      valueCol = coords.height + delta;
+export function resizeHandler($root, event) {
+  return new Promise(resolve => {
+    const $resizer = $(event.target)
+    const $parent = $resizer.closest('[data-type="resizable"]')
+    const coords = $parent.getCoords()
+    const type = $resizer.data.resize
+    const sideProp = type === 'col' ? 'bottom' : 'right'
+    let value
 
-      $resizer.css({
-        bottom: valueCol > 20 ? -delta + "px" : coords.height - 20 + "px",
-      });
-    }
-  };
+    $resizer.css({
+      opacity: 1,
+      [sideProp]: '-5000px'
+    })
 
-  document.onmouseup = () => {
-    if (valueCol || valueRow) {
-      if (type === "col") {
-        cells.forEach((element) => {
-          console.log(valueRow);
-          element.style.width = valueRow > 20 ? valueRow + "px" : "20px";
-        });
-        $resizer.css({ right: 0 });
+    document.onmousemove = e => {
+      if (type === 'col') {
+        const delta = e.pageX - coords.right
+        value = coords.width + delta
+        $resizer.css({right: -delta + 'px'})
       } else {
-        $parent.css({ height: valueCol > 20 ? valueCol + "px" : "20px" });
-
-        $resizer.css({ bottom: 0 });
+        const delta = e.pageY - coords.bottom
+        value = coords.height + delta
+        $resizer.css({bottom: -delta + 'px'})
       }
     }
-    document.onmousemove = null;
 
-    document.onmouseup = null;
-  };
+    document.onmouseup = () => {
+      document.onmousemove = null
+      document.onmouseup = null
+
+      if (type === 'col') {
+        $parent.css({width: value + 'px'})
+        $root.findAll(`[data-col="${$parent.data.col}"]`)
+            .forEach(el => el.style.width = value + 'px')
+      } else {
+        $parent.css({height: value + 'px'})
+      }
+
+      resolve({
+        value,
+        type,
+        id: $parent.data[type]
+      })
+
+      $resizer.css({
+        opacity: 0,
+        bottom: 0,
+        right: 0
+      })
+    }
+  })
 }
