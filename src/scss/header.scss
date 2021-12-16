@@ -2,6 +2,10 @@
 @import "mixins";
 
 .excel__header {
+  a {
+    color: #000 !important;
+    text-decoration: none;
+  }
   position: absolute;
   top: 0;
   right: 0;
