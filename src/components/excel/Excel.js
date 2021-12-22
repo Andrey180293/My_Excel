@@ -1,4 +1,4 @@
-import { $ } from "@core/dom";
+conimport { $ } from "@core/dom";
 import { Emitter } from "@core/Emitter";
 import { StoreSubscriber } from "@core/StoreSubscriber";
 import { updateDate } from "@/redux/actions";
